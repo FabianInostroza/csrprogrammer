@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "bc_def.h"
 #include "stopwatch.h"
+#include <unistd.h>
 
 static const uint32_t crc_table[] =
 {

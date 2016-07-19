@@ -134,19 +134,29 @@ bool UsbProgrammer::Write(uint16_t addr, uint16_t data)
 
 bool UsbProgrammer::SetTransferSpeed(uint16_t speed)
 {
+    unsigned char d[5];
     if(!usb.IsInitialized()) return false;
 
     uint8_t low = speed;
     uint8_t high = speed >> 8;
-    return usb.WriteData((arr){0,3,0,high,low},5);
+    d[0] = 0;
+    d[1] = 3;
+    d[2] = 0;
+    d[3] = high;
+    d[4] = low;
+    return usb.WriteData(d,5);
 }
 
 bool UsbProgrammer::IsXAPStopped(void)
 {
+    unsigned char d[3];
     if(!IsInitialized()) return false;
 
     uint16_t data[2];
-    usb.WriteData((arr){0,4,0},3);
+    d[0] = 0;
+    d[1] = 4;
+    d[2] = 0;
+    usb.WriteData(d,3);
     usb.ReadData((unsigned char*)data,4);
     return data[1];
 }
@@ -167,17 +177,31 @@ bool UsbProgrammer::IsInitialized(void)
 
 bool UsbProgrammer::SetMode(bool spi)
 {
+    unsigned char d[5];
     if(!usb.IsInitialized()) return false;
 
     uint8_t data = spi ? 0 : 0xff;
-    return usb.WriteData((arr){0,9,0,0,data},5);
+    d[0] = 0;
+    d[1] = 9;
+    d[2] = 0;
+    d[3] = 0;
+    d[4] = data;
+    return usb.WriteData(d,5);
 }
 
 bool UsbProgrammer::ClearCmdBits()
 {
+    unsigned char d[7];
     if(!usb.IsInitialized()) return false;
 
-    return usb.WriteData((arr){0,15,0,0,0,0,0},7);
+    d[0] = 0;
+    d[1] = 15;
+    d[2] = 0;
+    d[3] = 0;
+    d[4] = 0;
+    d[5] = 0;
+    d[6] = 0;
+    return usb.WriteData(d,7);
 }
 
 UsbProgrammer* UsbProgrammer::getProgrammer()
